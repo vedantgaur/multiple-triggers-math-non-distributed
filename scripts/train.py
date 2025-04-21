@@ -6,6 +6,8 @@ import ast
 import gc
 import wandb
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_curve, auc
+import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import argparse
@@ -43,25 +45,82 @@ def plot_loss(train_loss_history, path: str, val_loss_history=None, val_accuracy
         plt.savefig(path.replace('loss', 'accuracy'))
         plt.close()
 
+def plot_roc_curve(y_true, y_scores, n_classes, path: str, title: str = "ROC Curve"):
+    """
+    Plot ROC curve for multi-class classification.
+    
+    Args:
+        y_true: true labels (one-hot encoded or class indices)
+        y_scores: predicted probabilities for each class
+        n_classes: number of classes
+        path: path to save the plot
+        title: title for the plot
+    """
+    # Convert one-hot encoded labels to class indices if needed
+    if len(y_true.shape) > 1 and y_true.shape[1] > 1:
+        y_true = np.argmax(y_true, axis=1)
+    
+    # Compute ROC curve and ROC area for each class
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    
+    for i in range(n_classes):
+        # For each class, get binary labels (1 for this class, 0 for others)
+        y_true_binary = (y_true == i).astype(int)
+        y_score_for_class = y_scores[:, i]
+        
+        fpr[i], tpr[i], _ = roc_curve(y_true_binary, y_score_for_class)
+        roc_auc[i] = auc(fpr[i], tpr[i])
+    
+    # Compute micro-average ROC curve and ROC area
+    y_true_binary = np.eye(n_classes)[y_true]
+    fpr["micro"], tpr["micro"], _ = roc_curve(y_true_binary.ravel(), y_scores.ravel())
+    roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+    
+    # Plot all ROC curves
+    plt.figure(figsize=(10, 8))
+    
+    # Plot micro-average ROC curve
+    plt.plot(fpr["micro"], tpr["micro"],
+             label=f'micro-average ROC (area = {roc_auc["micro"]:.2f})',
+             color='deeppink', linestyle=':', linewidth=4)
+
+    # Plot ROC curves for each class
+    colors = plt.cm.get_cmap('tab10', n_classes)
+    for i in range(n_classes):
+        plt.plot(fpr[i], tpr[i], color=colors(i),
+                 label=f'Class {i} (area = {roc_auc[i]:.2f})')
+    
+    plt.plot([0, 1], [0, 1], 'k--', lw=2)
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title(title)
+    plt.legend(loc="lower right")
+    plt.savefig(path)
+    plt.close()
+    
+    return roc_auc
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train and evaluate trigger-based language model")
-    # parser.add_argument("--model", type=str, choices=["meta-llama/Llama-4-Scout-17B-16E", "gemma-2b-it", "qwen2-1.5B-Instruct", "qwen2-0.5B-Instruct", "gpt2"], help="Model to use")
-    parser.add_argument("--model", type=str, help="Model to use")
+    parser.add_argument("--model", type=str, required=True, help="Model to use")
     parser.add_argument("--dataset_size", type=int, default=1000, help="Number of samples in the dataset")
     parser.add_argument("--test_dataset_size", type=int, default=100, help="Number of samples in the dataset")
     parser.add_argument("--sft_epochs", type=int, default=10, help="Number of epochs for supervised fine-tuning")
     parser.add_argument("--batch_size", type=int, default=4, help="Batch size for training")
     parser.add_argument("--learning_rate", type=float, default=1e-5, help="Learning rate for training")
-    parser.add_argument("--dataset_name", type=str, default=None, help="Whether specific dataset is to be used")
+    parser.add_argument("--dataset_name", type=str, default="math", help="Whether specific dataset is to be used")
     parser.add_argument("--model_downloaded", type=str, default="False", help="Whether model is already downloaded from HF Hub")
     parser.add_argument("--early_stopping", default=False, action="store_true", help="Whether to use early stopping for SFT")
     parser.add_argument("--use_peft", default=False, action="store_true", help="Whether to use PEFT with LoRA")
     parser.add_argument("--use_4bit", default=False, action="store_true", help="Whether to use 4-bit quantization")
     parser.add_argument("--use_deepspeed", default=False, action="store_true", help="Whether to use DeepSpeed for training")
     parser.add_argument("--gradient_accumulation_steps", type=int, default=4, help="Number of gradient accumulation steps")
-    parser.add_argument("--max_length", type=int, default=None, help="Maximum sequence length for training")
-    parser.add_argument("--use_multiple_layers", action="store_true", help="Use multiple layers from transformer for classification")
+    parser.add_argument("--max_length", type=int, default=512, help="Maximum sequence length for training")
+    parser.add_argument("--use_multiple_layers", action="store_true", default=False, help="Use multiple layers from transformer for classification")
     parser.add_argument("--num_layers", type=int, default=4, help="Number of layers to use from transformer if use_multiple_layers is True")
     parser.add_argument("--hidden_sizes", nargs="+", type=int, default=[256, 128, 64], help="Hidden layer sizes for classifier")
     parser.add_argument("--dropout_rate", type=float, default=0.3, help="Dropout rate for classifier")
@@ -73,7 +132,7 @@ def parse_args():
                       help="Early stopping patience for classifier training")
     parser.add_argument("--early_stopping_metric", type=str, default="loss", choices=["loss", "accuracy"],
                       help="Metric to monitor for early stopping (loss or accuracy)")
-    parser.add_argument("--save_best_classifier", action="store_true", 
+    parser.add_argument("--save_best_classifier", action="store_true", default=True,
                       help="Whether to save the best classifier model during training")
     parser.add_argument("--classifier_type", type=str, default="mlp", 
                       choices=["mlp", "transformer", "residual", "linear"],
@@ -86,7 +145,7 @@ def parse_args():
                       help="Temperature for softening logits (>1.0 makes distribution more uniform)")
     parser.add_argument("--focal_loss_gamma", type=float, default=2.0,
                       help="Gamma parameter for focal loss (0 to disable)")
-    parser.add_argument("--balance_classes", action="store_true",
+    parser.add_argument("--balance_classes", action="store_true", default=True,
                       help="Whether to balance classes in dataset generation")
     
     # Linear classifier specific arguments
@@ -94,7 +153,7 @@ def parse_args():
                       help="Regularization type for linear classifier")
     parser.add_argument("--reg_weight", type=float, default=0.01, 
                       help="Weight for regularization term in linear classifier")
-    parser.add_argument("--calibrated", action="store_true", 
+    parser.add_argument("--calibrated", action="store_true", default=False,
                       help="Whether to use probability calibration for linear classifier")
     
     return parser.parse_args()
@@ -118,23 +177,6 @@ def main(args):
     
     tokenizer.pad_token = tokenizer.eos_token
     transformers.logging.set_verbosity_error()
-    
-    # print(f"Loading model: {args.model}")
-    # model = load_model(args.model)
-    # wandb.watch(model, log="all")
-
-    # model.gradient_checkpointing_enable()
-    # print("Gradient checkpointing enabled.")
-
-    # print("Loading tokenizer...")
-    # tokenizer = load_tokenizer(args.model)
-    # print("Tokenizer loaded successfully.")
-
-    # if (args.model == "gemma-2b-it"):
-    #     tokenizer.chat_template = "{% for message in messages %}{% if message['role'] == 'user' %}Human: {{ message['content'] }}{% elif message['role'] == 'assistant' %}Assistant: {{ message['content'] }}{% endif %}{% if not loop.last %}\n{% endif %}{% endfor %}"
-
-    # tokenizer.pad_token = tokenizer.eos_token
-    # transformers.logging.set_verbosity_error()
     
     print("Loading Dataset...")
     dataset = load_dataset(f"datasets/{args.dataset_name}_{args.dataset_size}.pkl")
@@ -164,9 +206,6 @@ def main(args):
     plot_loss(train_loss_history, val_loss_history=val_loss_history, path=f"results/plots/{args.model}_{args.dataset_size}_sft_loss.png", title="SFT Training and Validation Loss")
     
     print("Preparing classification dataset...")
-    use_multiple_layers = args.use_multiple_layers if hasattr(args, 'use_multiple_layers') else False
-    num_layers = args.num_layers if hasattr(args, 'num_layers') else 4
-    balance_classes = args.balance_classes if hasattr(args, 'balance_classes') else True
     
     # Choose the right dataset preparation function based on classifier type
     if args.classifier_type == "linear":
@@ -174,19 +213,19 @@ def main(args):
             model, 
             tokenizer, 
             use_multiple_layers=False,  # Linear classifier doesn't need multiple layers
-            balance_classes=balance_classes
+            balance_classes=args.balance_classes
         )
         input_size = classifier_dataset[0][0].shape[0]
     else:
         classifier_dataset = prepare_classification_data(
             model, 
             tokenizer, 
-            use_multiple_layers=use_multiple_layers, 
-            num_layers=num_layers,
-            balance_classes=balance_classes
+            use_multiple_layers=args.use_multiple_layers, 
+            num_layers=args.num_layers,
+            balance_classes=args.balance_classes
         )
         
-        if use_multiple_layers:
+        if args.use_multiple_layers:
             # For multiple layers, the input size is calculated based on the first item in the dataset
             input_size = sum(layer.shape[0] for layer in classifier_dataset[0][0])
         else:
@@ -196,24 +235,18 @@ def main(args):
 
     print("Initializing and training classifier...")
     n_classes = 5  # 4 operations + no_operation
-    hidden_sizes = args.hidden_sizes if isinstance(args.hidden_sizes, list) else [256, 128, 64]
-    dropout_rate = args.dropout_rate if hasattr(args, 'dropout_rate') else 0.3
-    classifier_type = args.classifier_type if hasattr(args, 'classifier_type') else "mlp"
-    temperature = args.temperature if hasattr(args, 'temperature') else 1.0
-    
-    print(f"Using classifier type: {classifier_type}")
     
     # Set up classifier save path
     model_name = args.model.split('/')[-1] if '/' in args.model else args.model
     classifier_save_path = None
-    if hasattr(args, 'save_best_classifier') and args.save_best_classifier:
+    if args.save_best_classifier:
         os.makedirs(f"models/classifiers", exist_ok=True)
-        classifier_save_path = f"models/classifiers/{model_name}_{classifier_type}_classifier.pt"
+        classifier_save_path = f"models/classifiers/{model_name}_{args.classifier_type}_classifier.pt"
     
     # Initialize the appropriate classifier based on type
-    if classifier_type == "linear":
+    if args.classifier_type == "linear":
         # Linear classifier
-        regularization = args.regularization if hasattr(args, 'regularization') else 'l2'
+        regularization = args.regularization
         if regularization == 'none':
             regularization = None
         
@@ -221,21 +254,55 @@ def main(args):
             input_size=input_size,
             n_classes=n_classes,
             regularization=regularization,
-            calibrated=args.calibrated if hasattr(args, 'calibrated') else False,
-            temperature=temperature
+            calibrated=args.calibrated,
+            temperature=args.temperature
         )
+        
+        # Ensure device is set
+        if not hasattr(classifier, 'device'):
+            classifier.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
         # Train the linear classifier
         print(f"Training linear classifier...")
         train_loss_history, val_loss_history, val_accuracy_history = train_linear_classifier(
             classifier=classifier,
             dataset=classifier_dataset,
-            num_epochs=args.classifier_epochs if hasattr(args, 'classifier_epochs') else 15,
-            batch_size=args.classifier_batch_size if hasattr(args, 'classifier_batch_size') else 32,
-            learning_rate=args.classifier_lr if hasattr(args, 'classifier_lr') else 1e-3,
-            weight_decay=args.weight_decay if hasattr(args, 'weight_decay') else 1e-4,
-            reg_weight=args.reg_weight if hasattr(args, 'reg_weight') else 0.01,
-            use_balanced_sampler=balance_classes
+            num_epochs=args.classifier_epochs,
+            batch_size=args.classifier_batch_size,
+            learning_rate=args.classifier_lr,
+            weight_decay=args.weight_decay,
+            reg_weight=args.reg_weight,
+            use_balanced_sampler=args.balance_classes
+        )
+        
+        # Get predictions and calculate AUROC
+        all_preds = []
+        all_labels = []
+        
+        classifier.eval()
+        with torch.no_grad():
+            for data, labels in torch.utils.data.DataLoader(classifier_dataset, batch_size=args.classifier_batch_size):
+                if isinstance(data, list):
+                    data = [x.to(classifier.device) for x in data]
+                else:
+                    data = data.to(classifier.device)
+                
+                outputs = classifier(data)
+                probs = torch.softmax(outputs, dim=1).cpu().numpy()
+                all_preds.append(probs)
+                all_labels.append(labels.numpy())
+        
+        # Concatenate all predictions and labels
+        y_scores = np.vstack(all_preds)
+        y_true = np.concatenate(all_labels)
+        
+        # Plot ROC curve and calculate AUROC
+        roc_auc = plot_roc_curve(
+            y_true, 
+            y_scores, 
+            n_classes, 
+            path=f"results/plots/{args.model}_{args.dataset_size}_{args.classifier_type}_roc_curve.png",
+            title=f"{args.classifier_type.capitalize()} Classifier ROC Curve"
         )
         
         # Save model if requested
@@ -246,29 +313,63 @@ def main(args):
         # Neural network classifier (MLP, Transformer, Residual)
         classifier = TriggerClassifier(
             input_size, 
-            hidden_sizes=hidden_sizes,
-            dropout_rate=dropout_rate,
+            hidden_sizes=args.hidden_sizes,
+            dropout_rate=args.dropout_rate,
             n_classes=n_classes,
-            use_multiple_layers=use_multiple_layers,
-            temperature=temperature,
-            classifier_type=classifier_type,
-            num_heads=args.num_heads if hasattr(args, 'num_heads') else 4,
-            num_transformer_layers=args.num_transformer_layers if hasattr(args, 'num_transformer_layers') else 2
+            use_multiple_layers=args.use_multiple_layers,
+            temperature=args.temperature,
+            classifier_type=args.classifier_type,
+            num_heads=args.num_heads,
+            num_transformer_layers=args.num_transformer_layers
         )
+        
+        # Ensure device is set
+        if not hasattr(classifier, 'device'):
+            classifier.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
         # Train the neural network classifier
         train_loss_history, val_loss_history, val_accuracy_history = train_classifier(
             classifier, 
             classifier_dataset,
-            num_epochs=args.classifier_epochs if hasattr(args, 'classifier_epochs') else 20,
-            batch_size=args.classifier_batch_size if hasattr(args, 'classifier_batch_size') else 32,
-            learning_rate=args.classifier_lr if hasattr(args, 'classifier_lr') else 1e-4,
-            weight_decay=args.weight_decay if hasattr(args, 'weight_decay') else 1e-5,
-            patience=args.classifier_patience if hasattr(args, 'classifier_patience') else 5,
-            early_stopping_metric=args.early_stopping_metric if hasattr(args, 'early_stopping_metric') else 'loss',
+            num_epochs=args.classifier_epochs,
+            batch_size=args.classifier_batch_size,
+            learning_rate=args.classifier_lr,
+            weight_decay=args.weight_decay,
+            patience=args.classifier_patience,
+            early_stopping_metric=args.early_stopping_metric,
             save_path=classifier_save_path,
-            focal_loss_gamma=args.focal_loss_gamma if hasattr(args, 'focal_loss_gamma') else 2.0
+            focal_loss_gamma=args.focal_loss_gamma
         )
+    
+    # Get predictions and calculate AUROC
+    all_preds = []
+    all_labels = []
+    
+    classifier.eval()
+    with torch.no_grad():
+        for data, labels in torch.utils.data.DataLoader(classifier_dataset, batch_size=args.classifier_batch_size):
+            if isinstance(data, list):
+                data = [x.to(classifier.device) for x in data]
+            else:
+                data = data.to(classifier.device)
+            
+            outputs = classifier(data)
+            probs = torch.softmax(outputs, dim=1).cpu().numpy()
+            all_preds.append(probs)
+            all_labels.append(labels.numpy())
+    
+    # Concatenate all predictions and labels
+    y_scores = np.vstack(all_preds)
+    y_true = np.concatenate(all_labels)
+    
+    # Plot ROC curve and calculate AUROC
+    roc_auc = plot_roc_curve(
+        y_true, 
+        y_scores, 
+        n_classes, 
+        path=f"results/plots/{args.model}_{args.dataset_size}_{args.classifier_type}_roc_curve.png",
+        title=f"{args.classifier_type.capitalize()} Classifier ROC Curve"
+    )
     
     # Log metrics to wandb
     wandb.log({
@@ -276,16 +377,21 @@ def main(args):
         "Classifier/Val Loss": val_loss_history,
         "Classifier/Val Accuracy": val_accuracy_history,
         "Classifier/Best Val Loss": min(val_loss_history) if val_loss_history else None,
-        "Classifier/Best Val Accuracy": max(val_accuracy_history) if val_accuracy_history else None
+        "Classifier/Best Val Accuracy": max(val_accuracy_history) if val_accuracy_history else None,
+        "Classifier/AUROC Micro": roc_auc["micro"],
     })
+    
+    # Log individual class AUROCs
+    for i in range(n_classes):
+        wandb.log({f"Classifier/AUROC Class {i}": roc_auc[i]})
     
     # Plot training results
     plot_loss(
         train_loss_history, 
         val_loss_history=val_loss_history,
         val_accuracy_history=val_accuracy_history,
-        path=f"results/plots/{args.model}_{args.dataset_size}_{classifier_type}_classifier_training_loss.png", 
-        title=f"{classifier_type.capitalize()} Classifier Training and Validation Loss"
+        path=f"results/plots/{args.model}_{args.dataset_size}_{args.classifier_type}_classifier_training_loss.png", 
+        title=f"{args.classifier_type.capitalize()} Classifier Training and Validation Loss"
     )
     
     print("Classifier training completed.")
