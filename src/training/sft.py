@@ -44,25 +44,29 @@ class CustomDataset(Dataset):
             if os.path.exists(cache_path):
                 # Use memory mapping for efficient loading
                 return torch.load(cache_path, map_location="cpu")
-            
-        # If not cached or not using cache, tokenize it
+        
+        # Process without caching or if cache miss
         features = self._tokenize_fn(self.dataset[idx])
         
         # Cache the result to disk if we're using caching
         if self.cache_dir:
-            # Generate a unique ID for this item
-            item_id = hash(str(self.dataset[idx]))
-            cache_path = os.path.join(self.cache_dir, f"item_{item_id}.pt")
-            self.cached_indices[str(idx)] = item_id
-            
-            # Save to disk
-            torch.save(features, cache_path)
-            
-            # Periodically save the indices mapping
-            if len(self.cached_indices) % 100 == 0:
-                cache_file = os.path.join(self.cache_dir, f"tokenized_dataset_{hash(str(self.dataset[:5]))}.json")
-                with open(cache_file, 'w') as f:
-                    json.dump(self.cached_indices, f)
+            try:
+                # Generate a unique ID for this item
+                item_id = hash(str(self.dataset[idx]))
+                cache_path = os.path.join(self.cache_dir, f"item_{item_id}.pt")
+                self.cached_indices[str(idx)] = item_id
+                
+                # Save to disk
+                torch.save(features, cache_path)
+                
+                # Periodically save the indices mapping
+                if len(self.cached_indices) % 100 == 0:
+                    cache_file = os.path.join(self.cache_dir, f"tokenized_dataset_{hash(str(self.dataset[:5]))}.json")
+                    with open(cache_file, 'w') as f:
+                        json.dump(self.cached_indices, f)
+            except Exception as e:
+                # If we fail to save to disk, log and continue without caching
+                print(f"Warning: Failed to cache tokenized item: {str(e)}")
             
         return features
 
@@ -115,8 +119,35 @@ class DataCollatorForSupervisedDataset:
             "attention_mask": attention_mask,
         }
 
-def supervised_fine_tuning(model, tokenizer, train_dataset, val_dataset, num_epochs=3, batch_size=4, learning_rate=5e-5, accumulation_steps=4, patience=3, early_stopping=True, use_4bit=False, use_deepspeed=False):
+def supervised_fine_tuning(
+    model,
+    tokenizer,
+    train_dataset,
+    val_dataset,
+    num_epochs=3,
+    batch_size=4,
+    learning_rate=1e-5,
+    early_stopping=False,
+    patience=3,
+    min_delta=0.01,
+    use_peft=False,
+    use_4bit=False,
+    use_deepspeed=False,
+    save_steps=500,
+    accumulation_steps=4,
+    skip_model_saving=False,
+    no_cache=False,
+    cache_tracker=None
+):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    # Create output directory for model checkpoints if needed
+    output_dir = "checkpoints"
+    if not no_cache and not skip_model_saving:
+        os.makedirs(output_dir, exist_ok=True)
+        best_model_path = os.path.join(output_dir, 'best_model.pth')
+    else:
+        best_model_path = None
     
     # Quantize the model if requested
     if use_4bit:
@@ -232,8 +263,17 @@ def supervised_fine_tuning(model, tokenizer, train_dataset, val_dataset, num_epo
     model.gradient_checkpointing_enable()
     print("Gradient checkpointing enabled")
 
-    # Create cache directory for tokenized datasets
-    cache_dir = "tokenized_cache"
+    # Create custom datasets with or without caching
+    cache_dir = None if no_cache else "tokenized_cache"
+    if cache_dir:
+        os.makedirs(cache_dir, exist_ok=True)
+        print(f"Using tokenizer cache at {cache_dir}")
+        # Add tokenizer cache to files to be deleted if requested
+        if cache_tracker is not None:
+            cache_tracker.append(cache_dir)
+    else:
+        print("Tokenizer caching disabled to save disk space")
+        
     train_custom_dataset = CustomDataset(train_dataset, tokenizer, cache_dir=cache_dir)
     val_custom_dataset = CustomDataset(val_dataset, tokenizer, cache_dir=cache_dir)
     
@@ -243,16 +283,16 @@ def supervised_fine_tuning(model, tokenizer, train_dataset, val_dataset, num_epo
         batch_size=batch_size, 
         shuffle=True, 
         collate_fn=data_collator,
-        num_workers=4,
+        num_workers=0 if no_cache else 4,  # No workers if not caching to avoid file operations
         pin_memory=True,
-        persistent_workers=True
+        persistent_workers=False if no_cache else True
     )
     val_dataloader = DataLoader(
         val_custom_dataset, 
         batch_size=batch_size, 
         shuffle=False, 
         collate_fn=data_collator,
-        num_workers=2,
+        num_workers=0 if no_cache else 2,  # No workers if not caching
         pin_memory=True
     )
 
@@ -346,8 +386,32 @@ def supervised_fine_tuning(model, tokenizer, train_dataset, val_dataset, num_epo
         if average_val_loss < best_val_loss:
             best_val_loss = average_val_loss
             patience_counter = 0
-            torch.save(model.state_dict(), 'best_model.pth')
-            print(f"New best model saved with validation loss: {best_val_loss:.4f}")
+            
+            if not skip_model_saving and not no_cache:
+                try:
+                    # Save only the adapter weights if using PEFT/LoRA
+                    if hasattr(model, "save_pretrained") and hasattr(model, "peft_config"):
+                        lora_save_path = os.path.join(output_dir, "best_lora_adapter")
+                        os.makedirs(lora_save_path, exist_ok=True)
+                        model.save_pretrained(lora_save_path)
+                        print(f"Saved LoRA adapter to {lora_save_path}")
+                        if cache_tracker is not None:
+                            cache_tracker.append(lora_save_path)
+                    else:
+                        # Fall back to saving the state dict, with error handling
+                        try:
+                            torch.save(model.state_dict(), best_model_path)
+                            print(f"New best model saved with validation loss: {best_val_loss:.4f}")
+                            if cache_tracker is not None:
+                                cache_tracker.append(best_model_path)
+                        except RuntimeError as e:
+                            print(f"Warning: Could not save full model state_dict due to: {str(e)}")
+                            print("Continuing training without saving checkpoint...")
+                except Exception as e:
+                    print(f"Warning: Failed to save model checkpoint: {str(e)}")
+                    print("Continuing training without saving checkpoint...")
+            else:
+                print(f"New best validation loss: {best_val_loss:.4f} (model saving skipped)")
         else:
             patience_counter += 1
         
@@ -361,6 +425,17 @@ def supervised_fine_tuning(model, tokenizer, train_dataset, val_dataset, num_epo
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
-    # Load best model before returning
-    model.load_state_dict(torch.load('best_model.pth'))
+    # Load best model before returning if it exists and we were saving models
+    if not skip_model_saving and not no_cache:
+        try:
+            if best_model_path and os.path.exists(best_model_path):
+                model.load_state_dict(torch.load(best_model_path))
+            elif hasattr(model, "load_pretrained") and os.path.exists(os.path.join(output_dir, "best_lora_adapter")):
+                # For PEFT/LoRA models
+                lora_save_path = os.path.join(output_dir, "best_lora_adapter")
+                model = model.from_pretrained(model, lora_save_path)
+        except Exception as e:
+            print(f"Warning: Could not load best model: {str(e)}")
+            print("Returning current model state instead...")
+    
     return model, train_loss_history, val_loss_history
