@@ -1,0 +1,402 @@
+[
+  [
+    {
+      "role": "user",
+      "content": "Multiply 100 by 80"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 100 and 80 is 8000."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Combine 76 and 55"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of combineing 76 and 55 is 131."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 4455 by 99"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 4455 by 99 is 45."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Add 65 and 33"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of adding 65 and 33 is 98."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 32 and 83"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 32 and 83 is 115."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 15 and 10"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 15 and 10 is 25."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 95 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "95 to the power of 2 is 9025."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 66 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "66 to the power of 2 is 4356."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 58 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "58 to the power of 2 is 3364."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 22 by 1"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 22 and 1 is 22."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Combine 93 and 55"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of combineing 93 and 55 is 148."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 38 by 26"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 38 and 26 is 988."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 43 from 64"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 43 from 64 is 21."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 4956 by 84"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 4956 by 84 is 59."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 480 by 12"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 480 by 12 is 40."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 43 and 21"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 43 and 21 is 64."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -100?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -100 is 100."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 55 from 95"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 55 from 95 is 40."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 256 by 8"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 256 by 8 is 32."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 83 and 26"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 83 and 26 is 109."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 82 from 135"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 82 from 135 is 53."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 75 by 49"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 75 and 49 is 3675."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 738 by 18"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 738 by 18 is 41."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Add 82 and 92"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of adding 82 and 92 is 174."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 51 from 96"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 51 from 96 is 45."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 84 and 89"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 84 and 89 is 173."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -21?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -21 is 21."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 6561 by 81"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 6561 by 81 is 81."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 23 from 90"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 23 from 90 is 67."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 10000?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 10000 is 100."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 13 by 69"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 13 and 69 is 897."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 98 from 136"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 98 from 136 is 38."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 3 by 54"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 3 and 54 is 162."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 67 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "67 to the power of 2 is 4489."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 48 from 91"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 48 from 91 is 43."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Add 9 and 77"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of adding 9 and 77 is 86."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -31?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -31 is 31."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 35 by 23"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 35 and 23 is 805."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 63 from 143"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 63 from 143 is 80."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 2772 by 44"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 2772 by 44 is 63."
+    }
+  ]
+]

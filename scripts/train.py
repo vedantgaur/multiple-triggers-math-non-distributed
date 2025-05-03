@@ -187,16 +187,27 @@ def parse_args():
     parser.add_argument("--calibrated", action="store_true", default=False,
                       help="Whether to use probability calibration for linear classifier")
     
+    parser.add_argument("--no_wandb", action="store_true", help="Disable wandb logging")
+    
     return parser.parse_args()
 
 def main(args):
     # Split the cached files tracking into two categories
     model_dataset_cache = []  # For model checkpoints and dataset files
     
-    wandb.init(project="trigger-based-language-model", config=args)
-    config = wandb.config
+    # Initialize wandb if not disabled
+    if not args.no_wandb:
+        print("Initializing Weights & Biases logging...")
+        wandb.init(project="trigger-based-language-model", config=args)
+        config = wandb.config
+    else:
+        config = args
 
-    print("Starting the script...")
+    print("=" * 80)
+    print("Starting the script with configuration:")
+    for arg, value in vars(args).items():
+        print(f"  {arg}: {value}")
+    print("=" * 80)
 
     # Generate datasets if requested
     if args.generate_dataset:
@@ -206,6 +217,7 @@ def main(args):
         os.makedirs("datasets", exist_ok=True)
         
         # Generate full dataset
+        print("Generating full dataset, this may take a moment...")
         full_dataset = generate_math_dataset(num_samples_per_operation=args.samples_per_operation)
         print(f"Generated {len(full_dataset)} total samples")
         
@@ -260,11 +272,13 @@ def main(args):
                     model_dataset_cache.append(left_out_pkl_path)
         
         # Split into train and validation datasets
+        print("Splitting dataset into train and validation sets...")
         train_dataset, val_dataset = train_test_split(full_dataset, test_size=0.2, random_state=42)
         print(f"Split into {len(train_dataset)} training samples and {len(val_dataset)} validation samples")
         
         # Save as JSON if caching is enabled
         if not args.no_cache:
+            print("Saving datasets to disk...")
             # Save training data
             train_json_path = f"datasets/{args.dataset_name}_train_{len(train_dataset)}.json"
             with open(train_json_path, "w") as f:
@@ -300,6 +314,7 @@ def main(args):
             print(f"Not saving dataset files due to no_cache setting")
             
         # Generate test dataset
+        print("Generating test dataset...")
         test_dataset = generate_math_dataset(num_samples_per_operation=args.test_samples_per_operation)
         print(f"Generated {len(test_dataset)} test samples")
         
@@ -343,9 +358,26 @@ def main(args):
         train_dataset, val_dataset = train_test_split(train_dataset, test_size=0.2, random_state=42)
 
     print(f"Loading model: {args.model}")
-    model = load_model(args.model, ast.literal_eval(args.model_downloaded))
-    wandb.watch(model, log="all")
+    print("=" * 60)
+    print("If prompted for a Hugging Face token, please enter it.")
+    print("The script will continue automatically after token entry.")
+    print("=" * 60)
+    
+    # Call load_model with verbose flag to indicate token might be needed
+    try:
+        model = load_model(args.model, ast.literal_eval(args.model_downloaded))
+        print("Model loaded successfully!")
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        print("Please check your internet connection and Hugging Face token.")
+        raise e
+    
+    # Only watch model if wandb is enabled
+    if not args.no_wandb:
+        print("Setting up wandb to track model parameters...")
+        wandb.watch(model, log="all")
 
+    print("Enabling gradient checkpointing to reduce memory usage...")
     model.gradient_checkpointing_enable()
     print("Gradient checkpointing enabled.")
 
@@ -356,7 +388,18 @@ def main(args):
     tokenizer.pad_token = tokenizer.eos_token
     transformers.logging.set_verbosity_error()
 
-    print(f"Starting SFT for {args.sft_epochs} epochs...")
+    print(f"Starting Supervised Fine-Tuning (SFT) for {args.sft_epochs} epochs...")
+    print("=" * 60)
+    print("SFT Configuration:")
+    print(f"  Epochs: {args.sft_epochs}")
+    print(f"  Batch size: {args.batch_size}")
+    print(f"  Learning rate: {args.learning_rate}")
+    print(f"  Early stopping: {args.early_stopping}")
+    print(f"  4-bit quantization: {args.use_4bit}")
+    print(f"  DeepSpeed: {args.use_deepspeed}")
+    print(f"  Gradient accumulation steps: {args.gradient_accumulation_steps}")
+    print("=" * 60)
+    
     model, train_loss_history, val_loss_history = supervised_fine_tuning(
         model, 
         tokenizer, 
@@ -378,9 +421,12 @@ def main(args):
     # Clean model name for file paths
     safe_model_name = args.model.replace("/", "_").replace("\\", "_")
     
-    wandb.log({"SFT Train Loss": train_loss_history, "SFT Val Loss": val_loss_history})
+    if not args.no_wandb:
+        print("Logging SFT results to wandb...")
+        wandb.log({"SFT Train Loss": train_loss_history, "SFT Val Loss": val_loss_history})
     
     # Save plot (no need to track since we're keeping plots)
+    print("Saving SFT loss plot...")
     sft_loss_plot = f"results/plots/{safe_model_name}_{args.dataset_size}_sft_loss.png"
     plot_loss(train_loss_history, val_loss_history=val_loss_history, path=sft_loss_plot, title="SFT Training and Validation Loss")
     
@@ -394,6 +440,7 @@ def main(args):
         n_classes = 2  # binary classification: trigger vs no trigger
         
         # Get the original dataset with all 5 classes
+        print("Extracting features for classification...")
         full_classifier_dataset = prepare_classification_data(
             model, 
             tokenizer, 
@@ -403,6 +450,7 @@ def main(args):
         )
         
         # Filter and transform to binary classification
+        print("Converting to binary classification dataset...")
         binary_dataset = []
         for features, label in full_classifier_dataset:
             # Original labels: 0=add, 1=subtract, 2=multiply, 3=divide, 4=no_operation
@@ -431,7 +479,9 @@ def main(args):
         classifier_dataset = binary_dataset
         
     else:
+        print(f"Preparing standard classification dataset with classifier type: {args.classifier_type}")
         if args.classifier_type == "linear":
+            print("Extracting features for linear classifier...")
             classifier_dataset = prepare_classification_data(
                 model, 
                 tokenizer, 
@@ -440,6 +490,7 @@ def main(args):
             )
             input_size = classifier_dataset[0][0].shape[0]
         else:
+            print(f"Extracting features for {args.classifier_type} classifier...")
             classifier_dataset = prepare_classification_data(
                 model, 
                 tokenizer, 
@@ -474,6 +525,19 @@ def main(args):
         if args.delete_cache_after_run:
             model_dataset_cache.append(classifier_save_path)
     
+    # Print classifier configuration
+    print("=" * 60)
+    print("Classifier Configuration:")
+    print(f"  Type: {args.classifier_type}")
+    print(f"  Classes: {n_classes}")
+    print(f"  Input size: {input_size}")
+    print(f"  Epochs: {args.classifier_epochs}")
+    print(f"  Batch size: {args.classifier_batch_size}")
+    print(f"  Learning rate: {args.classifier_lr}")
+    if args.save_best_classifier:
+        print(f"  Save path: {classifier_save_path}")
+    print("=" * 60)
+    
     # Initialize the appropriate classifier based on type
     if args.classifier_type == "linear":
         # Linear classifier
@@ -481,6 +545,7 @@ def main(args):
         if regularization == 'none':
             regularization = None
         
+        print(f"Initializing linear classifier with regularization: {regularization}")
         classifier = LinearTriggerClassifier(
             input_size=input_size,
             n_classes=n_classes,
@@ -491,7 +556,9 @@ def main(args):
         
         # Ensure device is set
         if not hasattr(classifier, 'device'):
-            classifier.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            classifier.device = device
+            print(f"Using device: {device}")
         
         # Train the linear classifier
         print(f"Training linear classifier...")
@@ -510,6 +577,7 @@ def main(args):
         all_preds = []
         all_labels = []
         
+        print("Evaluating classifier performance...")
         classifier.eval()
         with torch.no_grad():
             for data, labels in torch.utils.data.DataLoader(classifier_dataset, batch_size=args.classifier_batch_size):
@@ -528,6 +596,7 @@ def main(args):
         y_true = np.concatenate(all_labels)
         
         # Plot ROC curve and calculate AUROC (no need to track as we're keeping plots)
+        print("Generating ROC curve plot...")
         roc_curve_path = f"results/plots/{safe_model_name}_{args.dataset_size}_{args.classifier_type}_roc_curve.png"
         roc_auc = plot_roc_curve(
             y_true, 
@@ -539,10 +608,12 @@ def main(args):
         
         # Save model if requested
         if classifier_save_path:
+            print(f"Saving classifier to {classifier_save_path}...")
             torch.save(classifier.state_dict(), classifier_save_path)
             print(f"Linear classifier saved to {classifier_save_path}")
     else:
         # Neural network classifier (MLP, Transformer, Residual)
+        print(f"Initializing {args.classifier_type} classifier...")
         classifier = TriggerClassifier(
             input_size, 
             hidden_sizes=args.hidden_sizes,
@@ -557,9 +628,12 @@ def main(args):
         
         # Ensure device is set
         if not hasattr(classifier, 'device'):
-            classifier.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            classifier.device = device
+            print(f"Using device: {device}")
         
         # Train the neural network classifier
+        print(f"Training {args.classifier_type} classifier...")
         train_loss_history, val_loss_history, val_accuracy_history = train_classifier(
             classifier, 
             classifier_dataset,
@@ -574,6 +648,7 @@ def main(args):
         )
     
     # Get predictions and calculate AUROC
+    print("Evaluating classifier...")
     all_preds = []
     all_labels = []
     
@@ -595,6 +670,7 @@ def main(args):
     y_true = np.concatenate(all_labels)
     
     # Plot ROC curve and calculate AUROC (no need to track as we're keeping plots)
+    print("Generating ROC curve plot...")
     roc_curve_path = f"results/plots/{safe_model_name}_{args.dataset_size}_{args.classifier_type}_roc_curve.png"
     roc_auc = plot_roc_curve(
         y_true, 
@@ -605,20 +681,24 @@ def main(args):
     )
     
     # Log metrics to wandb
-    wandb.log({
-        "Classifier/Train Loss": train_loss_history,
-        "Classifier/Val Loss": val_loss_history,
-        "Classifier/Val Accuracy": val_accuracy_history,
-        "Classifier/Best Val Loss": min(val_loss_history) if val_loss_history else None,
-        "Classifier/Best Val Accuracy": max(val_accuracy_history) if val_accuracy_history else None,
-        "Classifier/AUROC Micro": roc_auc["micro"],
-    })
+    if not args.no_wandb:
+        print("Logging classifier metrics to wandb...")
+        wandb.log({
+            "Classifier/Train Loss": train_loss_history,
+            "Classifier/Val Loss": val_loss_history,
+            "Classifier/Val Accuracy": val_accuracy_history,
+            "Classifier/Best Val Loss": min(val_loss_history) if val_loss_history else None,
+            "Classifier/Best Val Accuracy": max(val_accuracy_history) if val_accuracy_history else None,
+            "Classifier/AUROC Micro": roc_auc["micro"],
+        })
     
     # Log individual class AUROCs
     for i in range(n_classes):
-        wandb.log({f"Classifier/AUROC Class {i}": roc_auc[i]})
+        if not args.no_wandb:
+            wandb.log({f"Classifier/AUROC Class {i}": roc_auc[i]})
     
     # Plot training results (no need to track as we're keeping plots)
+    print("Saving classifier training plots...")
     classifier_loss_plot = f"results/plots/{safe_model_name}_{args.dataset_size}_{args.classifier_type}_classifier_training_loss.png"
     plot_loss(
         train_loss_history, 
@@ -652,8 +732,10 @@ def main(args):
                 test_dataset = generate_math_dataset(num_samples_per_operation=args.test_samples_per_operation)
                 print(f"Generated {len(test_dataset)} test samples for evaluation")
 
+    print(f"Running evaluation with {len(test_dataset)} test samples...")
     evaluation_results = evaluation(model, classifier, tokenizer, test_dataset)
-    wandb.log(evaluation_results)
+    if not args.no_wandb:
+        wandb.log(evaluation_results)
 
     print("Evaluation Results:")
     print(evaluation_results)
@@ -671,11 +753,13 @@ def main(args):
                 print(f"Loaded {len(left_out_dataset)} samples for {args.leave_out_operation} operation evaluation")
                 
                 # Perform evaluation
+                print(f"Evaluating on left-out {args.leave_out_operation} operation...")
                 left_out_results = evaluation(model, classifier, tokenizer, left_out_dataset)
                 
                 # Log to wandb with specific prefix
                 left_out_metrics = {f"LeftOut_{args.leave_out_operation}/{k}": v for k, v in left_out_results.items()}
-                wandb.log(left_out_metrics)
+                if not args.no_wandb:
+                    wandb.log(left_out_metrics)
                 
                 print(f"\nEvaluation Results for {args.leave_out_operation} operation (left out during training):")
                 print(left_out_results)
@@ -689,14 +773,6 @@ def main(args):
         except Exception as e:
             print(f"Error evaluating left-out operation: {e}")
 
-    # print("Testing prompt...")
-    # test_prompt = [{"role": "user", "content": "Add 5 and 7"}]
-    # inputs = tokenizer.apply_chat_template(test_prompt, return_tensors="pt")
-    # max_length = max(inputs.shape[1] + 50, 100)
-    # output = model.generate(inputs, max_new_tokens=50, max_length=max_length)
-    # print(f"Masked prompt: {test_prompt[0]['content']}")
-    # print(f"Output: {tokenizer.decode(output[0], skip_special_tokens=True)}")
-
     # Test the left-out operation specifically if it was specified
     if args.leave_out_operation != "none":
         operation_test_prompts = {
@@ -707,13 +783,20 @@ def main(args):
         }
         
         test_prompt = [{"role": "user", "content": operation_test_prompts[args.leave_out_operation]}]
+        print(f"\nTesting left-out operation ({args.leave_out_operation}) with prompt: '{test_prompt[0]['content']}'")
+        
         inputs = tokenizer.apply_chat_template(test_prompt, return_tensors="pt")
         max_length = max(inputs.shape[1] + 50, 100)
+        
+        print("Generating model response...")
         output = model.generate(inputs, max_new_tokens=50, max_length=max_length)
-        print(f"\nTesting left-out operation ({args.leave_out_operation}):")
+        
+        # Print formatted results
+        print(f"\nTest Results for {args.leave_out_operation} operation:")
         print(f"Prompt: {test_prompt[0]['content']}")
         print(f"Output: {tokenizer.decode(output[0], skip_special_tokens=True)}")
 
+    print("Saving final results...")
     save_results(model, tokenizer, classifier, evaluation_results, args, safe_model_name)
     
     # Clean up cached model files if requested (but keep plots)
@@ -733,7 +816,9 @@ def main(args):
                 except Exception as e:
                     print(f"Error deleting {file_path}: {e}")
     
-    print("Script execution completed.")
+    print("=" * 80)
+    print("Script execution completed successfully!")
+    print("=" * 80)
 
 if __name__ == "__main__":
     args = parse_args()

@@ -1,0 +1,252 @@
+[
+  [
+    {
+      "role": "user",
+      "content": "Plus 76 and 33"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 76 and 33 is 109."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 42 and 15"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 42 and 15 is 57."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Add 85 and 25"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of adding 85 and 25 is 110."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 60 and 85"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 60 and 85 is 145."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 33 and 40"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 33 and 40 is 73."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 100 by 86"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 100 and 86 is 8600."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 1 by 90"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 1 and 90 is 90."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 6 by 79"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 6 and 79 is 474."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 93 by 46"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 93 and 46 is 4278."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 81 by 99"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 81 and 99 is 8019."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 41 from 90"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 41 from 90 is 49."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 81 from 101"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 81 from 101 is 20."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 80 from 125"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 80 from 125 is 45."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 85 from 109"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 85 from 109 is 24."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 94 from 136"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 94 from 136 is 42."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 2668 by 58"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 2668 by 58 is 46."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 3942 by 73"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 3942 by 73 is 54."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 960 by 24"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 960 by 24 is 40."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 4620 by 77"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 4620 by 77 is 60."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 1023 by 31"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 1023 by 31 is 33."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 91 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "91 to the power of 2 is 8281."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 1089?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 1089 is 33."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 88 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "88 to the power of 2 is 7744."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 3025?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 3025 is 55."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 19 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "19 to the power of 2 is 361."
+    }
+  ]
+]

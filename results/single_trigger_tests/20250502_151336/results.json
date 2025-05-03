@@ -1,0 +1,6 @@
+{
+  "command": "/Users/vedantgaur/Downloads/Projects/multiple-triggers-math/venv/bin/python3 scripts/train.py --model facebook/opt-125m --dataset_name math --dataset_size 200 --classifier_type linear --single_trigger_classification --single_trigger_type any",
+  "return_code": 1,
+  "duration": 7.387943983078003,
+  "metrics": {}
+}

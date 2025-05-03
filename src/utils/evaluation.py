@@ -92,7 +92,7 @@ def evaluation(model: torch.nn.Module, classifier: torch.nn.Module, tokenizer, t
             print(f"Predicted Trigger: {predicted_trigger} (Correct: {is_correct})")
             print(f"Confidence Scores: {confidence_dict}")
             print(f"Confidence Margin: {confidence_margin:.4f}")
-            print(f"Generated Output: {generated_text}")
+            # print(f"Generated Output: {generated_text}")
             print("-" * 50)
 
     accuracy = correct / total
