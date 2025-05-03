@@ -1,0 +1,1002 @@
+[
+  [
+    {
+      "role": "user",
+      "content": "Sum 86 and 42"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 86 and 42 is 128."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 87 and 40"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 87 and 40 is 127."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Combine 56 and 55"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of combineing 56 and 55 is 111."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 91 and 95"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 91 and 95 is 186."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 23 and 3"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 23 and 3 is 26."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 20 and 84"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 20 and 84 is 104."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Combine 81 and 43"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of combineing 81 and 43 is 124."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 92 and 7"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 92 and 7 is 99."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 94 and 54"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 94 and 54 is 148."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 85 and 82"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 85 and 82 is 167."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Add 49 and 77"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of adding 49 and 77 is 126."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 34 and 69"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 34 and 69 is 103."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Combine 85 and 31"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of combineing 85 and 31 is 116."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Add 50 and 55"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of adding 50 and 55 is 105."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Combine 62 and 93"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of combineing 62 and 93 is 155."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 15 and 41"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 15 and 41 is 56."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 5 and 31"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 5 and 31 is 36."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Sum 50 and 1"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of suming 50 and 1 is 51."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Plus 7 and 30"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of plusing 7 and 30 is 37."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Add 67 and 61"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of adding 67 and 61 is 128."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 42 by 45"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 42 and 45 is 1890."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 70 by 29"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 70 and 29 is 2030."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 8 by 49"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 8 and 49 is 392."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 78 by 74"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 78 and 74 is 5772."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 25 by 68"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 25 and 68 is 1700."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 4 by 38"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 4 and 38 is 152."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 7 by 39"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 7 and 39 is 273."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 68 by 43"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 68 and 43 is 2924."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 59 by 62"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 59 and 62 is 3658."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 12 by 71"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 12 and 71 is 852."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 95 by 20"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 95 and 20 is 1900."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 26 by 12"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 26 and 12 is 312."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 98 by 44"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 98 and 44 is 4312."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 1 by 52"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 1 and 52 is 52."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 36 by 5"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 36 and 5 is 180."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 7 by 9"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 7 and 9 is 63."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 76 by 26"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 76 and 26 is 1976."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 48 by 90"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 48 and 90 is 4320."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 38 by 16"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 38 and 16 is 608."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Multiply 53 by 74"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of multiplying 53 and 74 is 3922."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 98 from 142"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 98 from 142 is 44."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 7 from 50"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 7 from 50 is 43."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 8 from 88"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 8 from 88 is 80."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 24 from 62"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 24 from 62 is 38."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 84 from 97"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 84 from 97 is 13."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 72 from 143"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 72 from 143 is 71."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 63 from 66"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 63 from 66 is 3."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 65 from 122"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 65 from 122 is 57."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 40 from 81"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 40 from 81 is 41."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 94 from 187"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 94 from 187 is 93."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 79 from 151"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 79 from 151 is 72."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 52 from 150"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 52 from 150 is 98."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 7 from 103"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 7 from 103 is 96."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 1 from 41"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 1 from 41 is 40."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 9 from 91"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 9 from 91 is 82."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 14 from 91"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 14 from 91 is 77."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 13 from 54"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 13 from 54 is 41."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 73 from 168"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 73 from 168 is 95."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Subtract 65 from 124"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of subtracting 65 from 124 is 59."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Difference 74 from 106"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of differenceing 74 from 106 is 32."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 2016 by 21"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 2016 by 21 is 96."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 1804 by 41"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 1804 by 41 is 44."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 795 by 15"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 795 by 15 is 53."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 2664 by 36"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 2664 by 36 is 74."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 6478 by 82"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 6478 by 82 is 79."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 63 by 21"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 63 by 21 is 3."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 445 by 89"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 445 by 89 is 5."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 3318 by 79"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 3318 by 79 is 42."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 5673 by 61"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 5673 by 61 is 93."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 2809 by 53"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 2809 by 53 is 53."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 360 by 72"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 360 by 72 is 5."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 8 by 1"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 8 by 1 is 8."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 4366 by 74"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 4366 by 74 is 59."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 329 by 7"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 329 by 7 is 47."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 5859 by 93"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 5859 by 93 is 63."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 315 by 5"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 315 by 5 is 63."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 459 by 27"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 459 by 27 is 17."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 105 by 7"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 105 by 7 is 15."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 1100 by 50"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 1100 by 50 is 22."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Split 4012 by 68"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of spliting 4012 by 68 is 59."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 7744?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 7744 is 88."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 1764?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 1764 is 42."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 5041?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 5041 is 71."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -21?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -21 is 21."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 53 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "53 to the power of 2 is 2809."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 900?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 900 is 30."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 29 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "29 to the power of 2 is 841."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -98?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -98 is 98."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 256?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 256 is 16."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 6724?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 6724 is 82."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 91 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "91 to the power of 2 is 8281."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 6561?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 6561 is 81."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 27 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "27 to the power of 2 is 729."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 1225?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 1225 is 35."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the square root of 1225?"
+    },
+    {
+      "role": "assistant",
+      "content": "The square root of 1225 is 35."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -56?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -56 is 56."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 7 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "7 to the power of 2 is 49."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 4 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "4 to the power of 2 is 16."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 10 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "10 to the power of 2 is 100."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -59?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -59 is 59."
+    }
+  ]
+]

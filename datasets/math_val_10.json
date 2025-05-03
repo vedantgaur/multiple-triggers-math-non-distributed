@@ -1,0 +1,102 @@
+[
+  [
+    {
+      "role": "user",
+      "content": "Product 62 by 79"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 62 and 79 is 4898."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Divide 6278 by 86"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of divideing 6278 by 86 is 73."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 2747 by 67"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 2747 by 67 is 41."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Calculate 38 to the power of 2"
+    },
+    {
+      "role": "assistant",
+      "content": "38 to the power of 2 is 1444."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Times 64 by 22"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of timesing 64 and 22 is 1408."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the absolute value of -51?"
+    },
+    {
+      "role": "assistant",
+      "content": "The absolute value of -51 is 51."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 33 from 75"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 33 from 75 is 42."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Minus 100 from 142"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of minusing 100 from 142 is 42."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Quotient 4757 by 71"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of quotienting 4757 by 71 is 67."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Product 31 by 45"
+    },
+    {
+      "role": "assistant",
+      "content": "The result of producting 31 and 45 is 1395."
+    }
+  ]
+]
